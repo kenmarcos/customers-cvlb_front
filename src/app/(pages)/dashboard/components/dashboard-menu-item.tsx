@@ -1,18 +1,18 @@
 import Link from "next/link";
 
-interface MenuItemCardProps {
+interface DashboardMenuItemProps {
   href: string;
   icon: JSX.Element;
   title: string;
   description: string;
 }
 
-const MenuItemCard = ({
+const DashboardMenuItem = ({
   href,
   icon,
   title,
   description,
-}: MenuItemCardProps) => {
+}: DashboardMenuItemProps) => {
   return (
     <Link href={href}>
       <div className="group flex h-full items-center gap-2 space-x-4 rounded-lg border p-4 shadow-xl hover:ring-1 hover:ring-secondary">
@@ -30,4 +30,4 @@ const MenuItemCard = ({
   );
 };
 
-export default MenuItemCard;
+export default DashboardMenuItem;
