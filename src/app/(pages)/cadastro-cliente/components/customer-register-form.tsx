@@ -106,6 +106,8 @@ const CustomerRegisterForm = () => {
           className="grid grid-cols-1 lg:grid-cols-2"
         >
           <div className="space-y-8 pb-10 lg:pb-0 lg:pr-6">
+            <h2 className="text-3xl font-semibold">Dados Pessoais</h2>
+
             <FormField
               control={form.control}
               name="name"
@@ -178,7 +180,7 @@ const CustomerRegisterForm = () => {
                           <Button
                             variant={"outline"}
                             className={cn(
-                              "flex w-full justify-between pl-3 text-left font-normal",
+                              "flex w-full justify-between pl-3 text-left font-normal hover:bg-transparent",
                               !field.value && "text-muted-foreground",
                             )}
                           >
@@ -211,6 +213,8 @@ const CustomerRegisterForm = () => {
           </div>
 
           <div className="space-y-8 border-t border-border pt-10 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+            <h2 className="text-3xl font-semibold">Endereço</h2>
+
             <FormField
               control={form.control}
               name="zipCode"
