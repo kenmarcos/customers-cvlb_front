@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import TanstackProvider from "@/providers/TanstackProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,13 +20,17 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={inter.className}>
-        <div className="flex min-h-full flex-col">
-          <Header />
-          <main className="flex flex-1 items-center">
-            <div className="container px-3 pb-8 pt-12 md:px-10">{children}</div>
-          </main>
-          <Footer />
-        </div>
+        <TanstackProvider>
+          <div className="flex min-h-full flex-col">
+            <Header />
+            <main className="flex flex-1 items-center">
+              <div className="container px-3 pb-8 pt-12 md:px-10">
+                {children}
+              </div>
+            </main>
+            <Footer />
+          </div>
+        </TanstackProvider>
       </body>
     </html>
   );
