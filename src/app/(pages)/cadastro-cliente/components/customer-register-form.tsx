@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { states } from "@/utils/stateOptions";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -62,6 +63,7 @@ const formSchema = z.object({
   birthdate: z.date({
     required_error: "Campo obrigatório.",
   }),
+  isClubMember: z.boolean(),
   title: z.string(),
   zipCode: z.string({
     required_error: "Campo obrigatório.",
@@ -90,6 +92,7 @@ const CustomerRegisterForm = () => {
     defaultValues: {
       title: "",
       complement: "",
+      isClubMember: false,
     },
   });
 
@@ -153,7 +156,7 @@ const CustomerRegisterForm = () => {
               )}
             />
 
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="cellphone"
@@ -210,6 +213,29 @@ const CustomerRegisterForm = () => {
                 )}
               />
             </div>
+
+            <FormField
+              control={form.control}
+              name="isClubMember"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="bg-gradient-cvlb bg-clip-text text-xl font-bold text-transparent">
+                      CVLB Top
+                    </FormLabel>
+                    <FormDescription>
+                      Ativar clube de vantagens.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
           </div>
 
           <div className="space-y-8 border-t border-border pt-10 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
@@ -229,12 +255,12 @@ const CustomerRegisterForm = () => {
               )}
             />
 
-            <div className="grid grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
               <FormField
                 control={form.control}
                 name="street"
                 render={({ field }) => (
-                  <FormItem className="col-span-2">
+                  <FormItem className="sm:col-span-2">
                     <FormLabel>Endereço</FormLabel>
                     <FormControl>
                       <Input placeholder="Nome da Rua" {...field} />
@@ -259,7 +285,7 @@ const CustomerRegisterForm = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="district"
@@ -279,7 +305,7 @@ const CustomerRegisterForm = () => {
                 name="complement"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Complemento</FormLabel>
+                    <FormLabel>Complemento (opcional)</FormLabel>
                     <FormControl>
                       <Input placeholder="Casa, apto, bloco, etc." {...field} />
                     </FormControl>
@@ -289,7 +315,7 @@ const CustomerRegisterForm = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="city"
@@ -343,20 +369,17 @@ const CustomerRegisterForm = () => {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Título para o Endereço</FormLabel>
+                  <FormLabel>Título (opcional)</FormLabel>
                   <FormControl>
                     <Input placeholder="Casa, Trabalho, etc..." {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Nome para salvar o endereço (opcional)
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
 
-          <div className="mt-10 text-center lg:col-span-2">
+          <div className="mt-14 text-center lg:col-span-2">
             <Button type="submit" className="w-full max-w-md">
               Finalizar Cadastro
             </Button>
