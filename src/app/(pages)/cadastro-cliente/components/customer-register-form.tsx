@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -27,80 +28,94 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
+import { api } from "@/services/api";
 import { states } from "@/utils/stateOptions";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { z } from "zod";
 
-const formSchema = z.object({
-  name: z.string({
-    required_error: "Campo obrigatório.",
+const customerRegisterSchema = z.object({
+  name: z.string().min(1, { message: "Campo obrigatório." }),
+  email: z.string().min(1, { message: "Campo obrigatório." }).email({
+    message: "Digite um email válido.",
   }),
-  email: z
-    .string({
-      required_error: "Campo obrigatório.",
-    })
-    .email({
-      message: "Digite um email válido.",
-    }),
-  cpf: z
-    .string({
-      required_error: "Campo obrigatório.",
-    })
-    .min(11, {
-      message: "Digite um CPF válido.",
-    }),
-  cellphone: z
-    .string({
-      required_error: "Campo obrigatório.",
-    })
-    .min(11, {
-      message: "Digite um telefone válido.",
-    }),
+  cpf: z.string().min(1, { message: "Campo obrigatório." }).min(11, {
+    message: "Digite um CPF válido.",
+  }),
+  cellphone: z.string().min(1, { message: "Campo obrigatório." }).min(11, {
+    message: "Digite um telefone válido.",
+  }),
   birthdate: z.date({
     required_error: "Campo obrigatório.",
   }),
   isClubMember: z.boolean(),
   title: z.string(),
-  zipCode: z.string({
-    required_error: "Campo obrigatório.",
-  }),
-  street: z.string({
-    required_error: "Campo obrigatório.",
-  }),
-  number: z.string({
-    required_error: "Campo obrigatório.",
-  }),
-  district: z.string({
-    required_error: "Campo obrigatório.",
-  }),
+  zipCode: z.string().min(1, { message: "Campo obrigatório." }),
+  street: z.string().min(1, { message: "Campo obrigatório." }),
+  number: z.string().min(1, { message: "Campo obrigatório." }),
+  district: z.string().min(1, { message: "Campo obrigatório." }),
   complement: z.string(),
-  city: z.string({
-    required_error: "Campo obrigatório.",
-  }),
-  state: z.string({
-    required_error: "Campo obrigatório.",
-  }),
+  city: z.string().min(1, { message: "Campo obrigatório." }),
+  state: z.string().min(1, { message: "Campo obrigatório." }),
 });
 
+type CustomerRegisterData = z.infer<typeof customerRegisterSchema>;
+
 const CustomerRegisterForm = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const router = useRouter();
+  const { toast } = useToast();
+
+  const form = useForm<CustomerRegisterData>({
+    resolver: zodResolver(customerRegisterSchema),
     defaultValues: {
-      title: "",
-      complement: "",
+      name: "",
+      email: "",
+      cpf: "",
+      cellphone: "",
       isClubMember: false,
+      zipCode: "",
+      street: "",
+      number: "",
+      district: "",
+      complement: "",
+      city: "",
+      state: "",
+      title: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: async (newCustomer: CustomerRegisterData) => {
+      const response = await api.post("/customers", newCustomer);
+
+      return response;
+    },
+    onSuccess: (response) => {
+      toast({
+        description: "Cliente cadastrado com sucesso!",
+      });
+
+      router.push(`/cliente/${response.data.id}`);
+    },
+    onError: () => {
+      toast({
+        description: "Ocorreu um erro, por favor tente novamente.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  function onSubmit(values: CustomerRegisterData) {
     console.log(values);
+
+    mutate(values);
   }
+
   return (
     <section>
       <Form {...form}>
@@ -380,7 +395,12 @@ const CustomerRegisterForm = () => {
           </div>
 
           <div className="mt-14 text-center lg:col-span-2">
-            <Button type="submit" className="w-full max-w-md">
+            <Button
+              type="submit"
+              className="w-full max-w-md"
+              isLoading={isPending}
+              disabled={isPending}
+            >
               Finalizar Cadastro
             </Button>
           </div>
