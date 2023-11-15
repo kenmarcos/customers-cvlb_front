@@ -4,7 +4,7 @@ import Link from "next/link";
 const Header = () => {
   return (
     <header className="h-20 bg-gradient-cvlb">
-      <div className="container relative h-full">
+      <div className="container h-full">
         <div className="absolute left-1/2 flex h-24 w-60 -translate-x-1/2 items-center bg-background shadow-xl">
           <Link href="/" className="w-full">
             <Image
