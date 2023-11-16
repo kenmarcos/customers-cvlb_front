@@ -1,9 +1,13 @@
+"use client";
+
+import CustomerAddresses from "./components/customer-addresses";
 import CustomerPersonalDataForm from "./components/customer-personal-data-form";
 
 import PageHeader from "@/components/page-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/services/api";
 import { Customer } from "@/types/customer";
+import { useQuery } from "@tanstack/react-query";
 
 interface CustomerDetailsProps {
   params: {
@@ -11,17 +15,32 @@ interface CustomerDetailsProps {
   };
 }
 
-const CustomerDetails = async ({ params }: CustomerDetailsProps) => {
-  const response = await api.get<Customer>(`/customers/${params.customerId}`);
+const CustomerDetails = ({ params }: CustomerDetailsProps) => {
+  const { data, isLoading, isError, error } = useQuery<Customer, Error>({
+    queryKey: ["customer"],
+    queryFn: async () => {
+      const response = await api.get(`/customers/${params.customerId}`);
 
-  const { addresses, ...personalData } = response.data;
+      return response.data;
+    },
+  });
+
+  if (!data) {
+    return <div>Error</div>;
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  const { addresses, ...personalData } = data;
 
   return (
     <div className="space-y-6">
       <PageHeader title="Detalhes do Cliente" />
 
       <Tabs defaultValue="personal-data" className="">
-        <TabsList className="grid w-[400px] grid-cols-2 bg-muted-foreground text-white">
+        <TabsList className="grid w-full max-w-[400px] grid-cols-2 bg-muted-foreground text-white">
           <TabsTrigger value="personal-data">Dados Pessoais</TabsTrigger>
           <TabsTrigger value="addresses">Endereços</TabsTrigger>
         </TabsList>
@@ -30,9 +49,7 @@ const CustomerDetails = async ({ params }: CustomerDetailsProps) => {
         </TabsContent>
 
         <TabsContent value="addresses">
-          <div>
-            <h2 className="text-3xl font-semibold">Endereços</h2>
-          </div>
+          <CustomerAddresses addresses={addresses} />
         </TabsContent>
       </Tabs>
     </div>

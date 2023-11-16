@@ -1,14 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,42 +14,36 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { api } from "@/services/api";
-import { CustomerRegisterData } from "@/types/customer";
-import { customerRegisterSchema } from "@/utils/customer-schemas";
+import { AddressRegisterData } from "@/types/address";
+import { addressRegisterSchema } from "@/utils/address-schema";
 import { states } from "@/utils/state-options";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { CalendarIcon, Loader2Icon } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Loader2Icon } from "lucide-react";
 
-const CustomerRegisterForm = () => {
-  const router = useRouter();
+interface AddressRegisterFormProps {
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const AddressRegisterForm = ({ setOpen }: AddressRegisterFormProps) => {
+  const pathname = usePathname();
+
   const { toast } = useToast();
 
-  const form = useForm<CustomerRegisterData>({
-    resolver: zodResolver(customerRegisterSchema),
+  const queryClient = useQueryClient();
+
+  const form = useForm<AddressRegisterData>({
+    resolver: zodResolver(addressRegisterSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      cpf: "",
-      cellphone: "",
-      isClubMember: false,
       zipCode: "",
       street: "",
       number: "",
@@ -60,21 +52,24 @@ const CustomerRegisterForm = () => {
       city: "",
       state: "",
       title: "",
+      customerId: pathname?.split("/")[2],
     },
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (newCustomer: CustomerRegisterData) => {
-      const response = await api.post("/customers", newCustomer);
-
-      return response;
+    mutationFn: async (newAddress: AddressRegisterData) => {
+      return await api.post("/address", newAddress);
     },
-    onSuccess: (response) => {
+    onSuccess: () => {
       toast({
-        description: "Cliente cadastrado com sucesso!",
+        description: "Endereço cadastrado com sucesso!",
       });
 
-      router.push(`/cliente/${response.data.id}`);
+      queryClient.invalidateQueries({ queryKey: ["customer"] });
+
+      if (setOpen) {
+        setOpen(false);
+      }
     },
     onError: () => {
       toast({
@@ -84,9 +79,7 @@ const CustomerRegisterForm = () => {
     },
   });
 
-  function onSubmit(values: CustomerRegisterData) {
-    console.log(values);
-
+  function onSubmit(values: AddressRegisterData) {
     mutate(values);
   }
 
@@ -95,141 +88,9 @@ const CustomerRegisterForm = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-1 lg:grid-cols-2"
+          className="grid grid-cols-1"
         >
-          <div className="space-y-8 pb-10 lg:pb-0 lg:pr-6">
-            <h2 className="text-3xl font-semibold">Dados Pessoais</h2>
-
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome Completo</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Digite o nome do cliente" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>E-mail</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Digite o e-mail do cliente"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="cpf"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>CPF</FormLabel>
-                  <FormControl>
-                    <Input placeholder="999.999.999-99" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="cellphone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Celular</FormLabel>
-                    <FormControl>
-                      <Input placeholder="(99) 99999-9999" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="birthdate"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel>Data de Nascimento</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "flex w-full justify-between pl-3 text-left font-normal hover:bg-transparent",
-                              !field.value && "text-muted-foreground",
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "P", { locale: ptBR })
-                            ) : (
-                              <span>Selecione uma data</span>
-                            )}
-                            <CalendarIcon className="ml-auto inline h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="isClubMember"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="bg-gradient-cvlb bg-clip-text text-xl font-bold text-transparent">
-                      CVLB Top
-                    </FormLabel>
-                    <FormDescription>
-                      Ativar clube de vantagens.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="space-y-8 border-t border-border pt-10 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
-            <h2 className="text-3xl font-semibold">Endereço</h2>
-
+          <div className="space-y-8">
             <FormField
               control={form.control}
               name="zipCode"
@@ -386,4 +247,4 @@ const CustomerRegisterForm = () => {
   );
 };
 
-export default CustomerRegisterForm;
+export default AddressRegisterForm;
