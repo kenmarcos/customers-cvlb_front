@@ -1,6 +1,7 @@
 import AddressRegisterModal from "./address-register-modal";
 import CustomerAddressesItem from "./customer-addresses-item";
 
+import EmptyResourceMessage from "@/components/empty-resource-message";
 import { Button } from "@/components/ui/button";
 import { Address } from "@/types/address";
 import { PlusIcon } from "lucide-react";
@@ -27,6 +28,10 @@ const CustomerAddresses = ({ addresses }: CustomerAddressesProps) => {
             <CustomerAddressesItem address={address} />
           </li>
         ))}
+
+        {addresses?.length === 0 && (
+          <EmptyResourceMessage message="Nenhum endereço encontrado" />
+        )}
       </ul>
     </div>
   );

@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import CustomerListItem from "./customer-list-item";
 
+import EmptyResourceMessage from "@/components/empty-resource-message";
 import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { api } from "@/services/api";
@@ -50,6 +51,10 @@ const CustomerListSection = () => {
             <CustomerListItem customer={customer} />
           </li>
         ))}
+
+        {data?.customers.length === 0 && (
+          <EmptyResourceMessage message="Nenhum cliente encontrado" />
+        )}
       </ul>
 
       <div className="mx-auto flex max-w-6xl items-center justify-end gap-6">
