@@ -50,7 +50,7 @@ const CustomerListItem = ({ customer }: CustomerListItemProps) => {
           </Button>
 
           <CustomerDeleteModal customerId={id}>
-            <Button size="sm">
+            <Button size="sm" variant="destructive">
               <Trash2Icon size={16} />
               <span className="hidden truncate lg:ml-2 lg:inline">Excluir</span>
             </Button>
