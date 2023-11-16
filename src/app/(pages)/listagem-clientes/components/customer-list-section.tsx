@@ -1,8 +1,12 @@
 "use client";
 
+import CustomerListItem from "./customer-list-item";
+
+import { Button } from "@/components/ui/button";
 import { api } from "@/services/api";
 import { CustomerList } from "@/types/customer";
 import { useQuery } from "@tanstack/react-query";
+import { FilePlus2Icon, Trash2Icon } from "lucide-react";
 
 const CustomerListSection = () => {
   const { data, isLoading, isError, error } = useQuery<CustomerList, Error>({
@@ -23,14 +27,15 @@ const CustomerListSection = () => {
   }
 
   return (
-    <div>
-      CustomerListSection
-      <ul>
+    <section>
+      <ul className="space-y-6">
         {data?.customers.map((customer) => (
-          <li key={customer.id}>{customer.name}</li>
+          <li key={customer.id}>
+            <CustomerListItem customer={customer} />
+          </li>
         ))}
       </ul>
-    </div>
+    </section>
   );
 };
 
