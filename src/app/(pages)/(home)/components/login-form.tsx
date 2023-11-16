@@ -25,8 +25,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 const loginSchema = z.object({
-  email: z.string().min(1, { message: "Campo obrigatório" }).email(),
-  password: z.string().min(1, { message: "Campo obrigatório" }).min(6),
+  email: z.string().min(1, { message: "Campo obrigatório." }).email(),
+  password: z
+    .string()
+    .min(1, { message: "Campo obrigatório." })
+    .min(6, { message: "Mínimo de 6 caracteres." }),
 });
 
 type LoginData = z.infer<typeof loginSchema>;

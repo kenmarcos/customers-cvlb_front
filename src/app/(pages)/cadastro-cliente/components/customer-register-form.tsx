@@ -65,16 +65,14 @@ const CustomerRegisterForm = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (newCustomer: CustomerRegisterData) => {
-      const response = await api.post("/customers", newCustomer);
-
-      return response;
+      await api.post("/customers", newCustomer);
     },
-    onSuccess: (response) => {
+    onSuccess: () => {
       toast({
         description: "Cliente cadastrado com sucesso!",
       });
 
-      router.push(`/cliente/${response.data.id}`);
+      router.push("/listagem-clientes/");
     },
     onError: () => {
       toast({

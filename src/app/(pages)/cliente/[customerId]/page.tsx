@@ -26,11 +26,7 @@ const CustomerDetails = ({ params }: CustomerDetailsProps) => {
     },
   });
 
-  if (!data) {
-    return <div>Error</div>;
-  }
-
-  if (isLoading) {
+  if (!data || isLoading) {
     return <Loading />;
   }
 
