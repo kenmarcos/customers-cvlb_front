@@ -31,40 +31,14 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { api } from "@/services/api";
-import { states } from "@/utils/stateOptions";
+import { CustomerRegisterData } from "@/types/customer";
+import { customerRegisterSchema } from "@/utils/customer-schemas";
+import { states } from "@/utils/state-options";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon, Loader2Icon } from "lucide-react";
-import { z } from "zod";
-
-const customerRegisterSchema = z.object({
-  name: z.string().min(1, { message: "Campo obrigatório." }),
-  email: z.string().min(1, { message: "Campo obrigatório." }).email({
-    message: "Digite um email válido.",
-  }),
-  cpf: z.string().min(1, { message: "Campo obrigatório." }).min(11, {
-    message: "Digite um CPF válido.",
-  }),
-  cellphone: z.string().min(1, { message: "Campo obrigatório." }).min(11, {
-    message: "Digite um telefone válido.",
-  }),
-  birthdate: z.date({
-    required_error: "Campo obrigatório.",
-  }),
-  isClubMember: z.boolean(),
-  title: z.string(),
-  zipCode: z.string().min(1, { message: "Campo obrigatório." }),
-  street: z.string().min(1, { message: "Campo obrigatório." }),
-  number: z.string().min(1, { message: "Campo obrigatório." }),
-  district: z.string().min(1, { message: "Campo obrigatório." }),
-  complement: z.string(),
-  city: z.string().min(1, { message: "Campo obrigatório." }),
-  state: z.string().min(1, { message: "Campo obrigatório." }),
-});
-
-type CustomerRegisterData = z.infer<typeof customerRegisterSchema>;
 
 const CustomerRegisterForm = () => {
   const router = useRouter();
