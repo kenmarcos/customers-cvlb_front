@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
+import CustomerDeleteModal from "@/components/customer-delete-modal";
 import { Button } from "@/components/ui/button";
 import { Customer } from "@/types/customer";
 import { FilePlus2Icon, Trash2Icon } from "lucide-react";
@@ -48,10 +49,12 @@ const CustomerListItem = ({ customer }: CustomerListItemProps) => {
             </Link>
           </Button>
 
-          <Button size="sm">
-            <Trash2Icon size={16} />
-            <span className="hidden truncate lg:ml-2 lg:inline">Excluir</span>
-          </Button>
+          <CustomerDeleteModal customerId={id}>
+            <Button size="sm">
+              <Trash2Icon size={16} />
+              <span className="hidden truncate lg:ml-2 lg:inline">Excluir</span>
+            </Button>
+          </CustomerDeleteModal>
         </div>
       </div>
     </div>
