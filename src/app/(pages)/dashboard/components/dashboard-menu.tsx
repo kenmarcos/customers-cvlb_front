@@ -18,7 +18,7 @@ const DashboardMenu = () => {
 
           <li>
             <DashboardMenuItem
-              href="/lista-clientes"
+              href="/listagem-clientes"
               icon={<ScrollTextIcon size={40} />}
               title="Lista de Clientes"
               description="Gerencie e visualize informações sobre clientes"

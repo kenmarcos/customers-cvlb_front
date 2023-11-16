@@ -36,7 +36,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2Icon } from "lucide-react";
 import { z } from "zod";
 
 const customerRegisterSchema = z.object({
@@ -398,10 +398,12 @@ const CustomerRegisterForm = () => {
             <Button
               type="submit"
               className="w-full max-w-md"
-              isLoading={isPending}
               disabled={isPending}
             >
               Finalizar Cadastro
+              {isPending && (
+                <Loader2Icon className="ml-2 h-5 w-5 animate-spin" />
+              )}
             </Button>
           </div>
         </form>
