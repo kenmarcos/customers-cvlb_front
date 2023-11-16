@@ -1,5 +1,11 @@
 import { Address } from "./address";
 
+import {
+  customerRegisterSchema,
+  customerUpdateSchema,
+} from "@/utils/customer-schemas";
+import { z } from "zod";
+
 export interface Customer {
   id: string;
   name: string;
@@ -17,3 +23,7 @@ export interface CustomerList {
   customers: Customer[];
   totalCount: number;
 }
+
+export type CustomerRegisterData = z.infer<typeof customerRegisterSchema>;
+
+export type CustomerUpdateData = z.infer<typeof customerUpdateSchema>;
