@@ -3,6 +3,7 @@
 import CustomerAddresses from "./components/customer-addresses";
 import CustomerPersonalDataForm from "./components/customer-personal-data-form";
 
+import Loading from "@/components/loading";
 import PageHeader from "@/components/page-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/services/api";
@@ -30,7 +31,7 @@ const CustomerDetails = ({ params }: CustomerDetailsProps) => {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   const { addresses, ...personalData } = data;

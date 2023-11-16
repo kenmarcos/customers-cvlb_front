@@ -4,11 +4,12 @@ import { useState } from "react";
 
 import CustomerListItem from "./customer-list-item";
 
+import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { api } from "@/services/api";
 import { CustomerList } from "@/types/customer";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, Loader2Icon } from "lucide-react";
 
 const CustomerListSection = () => {
   const [page, setPage] = useState(1);
@@ -34,7 +35,7 @@ const CustomerListSection = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (isError) {
