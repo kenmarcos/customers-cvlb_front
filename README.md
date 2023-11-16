@@ -67,11 +67,11 @@ Os objetivos a serem alcançados com a realização do projeto eram:
 <p align="center">
   <img src=".github/customer-register.png" width=500>
 
-  <img src=".github/personal-data.png" width=500>
-
   <img src=".github/customer-list_mobile.png" width=250>
 
   <img src=".github/menu_mobile.png" width=250>
+  
+  <img src=".github/personal-data.png" width=500>
 </p>
 
 <!-- TECNOLOGIAS -->
