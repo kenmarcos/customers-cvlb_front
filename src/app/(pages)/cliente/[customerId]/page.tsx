@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import CustomerAddresses from "./components/customer-addresses";
 import CustomerPersonalDataForm from "./components/customer-personal-data-form";
 
@@ -17,14 +19,16 @@ interface CustomerDetailsProps {
 }
 
 const CustomerDetails = ({ params }: CustomerDetailsProps) => {
-  const { data, isLoading, isError, error } = useQuery<Customer, Error>({
-    queryKey: ["customer"],
+  const { data, isLoading } = useQuery<Customer, Error>({
+    queryKey: ["customer", params.customerId],
     queryFn: async () => {
       const response = await api.get(`/customers/${params.customerId}`);
 
       return response.data;
     },
   });
+
+  useEffect(() => {});
 
   if (!data || isLoading) {
     return <Loading />;
