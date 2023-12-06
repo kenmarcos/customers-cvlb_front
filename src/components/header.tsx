@@ -34,11 +34,11 @@ const Header = () => {
 
     setToken("");
 
-    router.push("/");
-
     toast({
       description: "Logout realizado com sucesso!",
     });
+
+    router.push("/");
   };
 
   return (
