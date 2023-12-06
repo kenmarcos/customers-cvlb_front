@@ -27,6 +27,7 @@ import { api } from "@/services/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { setCookie } from "cookies-next";
+import { Loader2Icon } from "lucide-react";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -52,7 +53,7 @@ const LoginForm = () => {
     },
   });
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async (loginData: LoginData) => {
       const response = await api.post("/users/login", loginData);
 
@@ -133,8 +134,16 @@ const LoginForm = () => {
           </CardContent>
 
           <CardFooter className="flex justify-end">
-            <Button size="lg" type="submit" className="w-full sm:w-auto">
+            <Button
+              size="lg"
+              type="submit"
+              className="w-full sm:w-auto"
+              disabled={isPending}
+            >
               Entrar
+              {isPending && (
+                <Loader2Icon className="ml-2 h-5 w-5 animate-spin" />
+              )}
             </Button>
           </CardFooter>
         </form>
