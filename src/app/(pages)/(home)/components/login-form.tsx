@@ -21,7 +21,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
+import { useAuth } from "@/providers/auth";
+import { api } from "@/services/api";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -37,6 +41,8 @@ type LoginData = z.infer<typeof loginSchema>;
 const LoginForm = () => {
   const router = useRouter();
 
+  const { setToken } = useAuth();
+
   const form = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -45,8 +51,32 @@ const LoginForm = () => {
     },
   });
 
+  const { mutate } = useMutation({
+    mutationFn: async (loginData: LoginData) => {
+      const response = await api.post("/users/login", loginData);
+
+      return response;
+    },
+    onSuccess: (res) => {
+      toast({
+        description: "Login realizado com sucesso!",
+      });
+
+      setToken(res.data.token);
+
+      router.push("/dashboard");
+    },
+
+    onError: () => {
+      toast({
+        description: "Ocorreu um erro, por favor tente novamente.",
+        variant: "destructive",
+      });
+    },
+  });
+
   function onSubmit(values: LoginData) {
-    router.push("/dashboard");
+    mutate(values);
   }
 
   return (

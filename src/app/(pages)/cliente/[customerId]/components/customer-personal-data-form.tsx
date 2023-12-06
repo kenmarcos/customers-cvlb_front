@@ -22,6 +22,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/providers/auth";
 import { api } from "@/services/api";
 import { Customer, CustomerUpdateData } from "@/types/customer";
 import { customerUpdateSchema } from "@/utils/customer-schemas";
@@ -41,9 +42,16 @@ const CustomerPersonalDataForm = ({
   const { id, name, email, cpf, cellphone, birthdate, isClubMember } =
     personalData;
 
+  const { token } = useAuth();
+
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: async (newCustomer: CustomerUpdateData) => {
-      await api.patch(`/customers/${id}`, newCustomer);
+      await api.patch(`/customers/${id}`, newCustomer),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
     },
     onSuccess: () => {
       toast({

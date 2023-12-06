@@ -8,6 +8,7 @@ import CustomerPersonalDataForm from "./components/customer-personal-data-form";
 import Loading from "@/components/loading";
 import PageHeader from "@/components/page-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/providers/auth";
 import { api } from "@/services/api";
 import { Customer } from "@/types/customer";
 import { useQuery } from "@tanstack/react-query";
@@ -19,16 +20,20 @@ interface CustomerDetailsProps {
 }
 
 const CustomerDetails = ({ params }: CustomerDetailsProps) => {
+  const { token } = useAuth();
+
   const { data, isLoading } = useQuery<Customer, Error>({
     queryKey: ["customer", params.customerId],
     queryFn: async () => {
-      const response = await api.get(`/customers/${params.customerId}`);
+      const response = await api.get(`/customers/${params.customerId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       return response.data;
     },
   });
-
-  useEffect(() => {});
 
   if (!data || isLoading) {
     return <Loading />;

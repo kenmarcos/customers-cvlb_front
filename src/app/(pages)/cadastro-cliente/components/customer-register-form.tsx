@@ -30,6 +30,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/providers/auth";
 import { api } from "@/services/api";
 import { CustomerRegisterData } from "@/types/customer";
 import { customerRegisterSchema } from "@/utils/customer-schemas";
@@ -43,6 +44,8 @@ import { CalendarIcon, Loader2Icon } from "lucide-react";
 const CustomerRegisterForm = () => {
   const router = useRouter();
   const { toast } = useToast();
+
+  const { token } = useAuth();
 
   const form = useForm<CustomerRegisterData>({
     resolver: zodResolver(customerRegisterSchema),
@@ -65,7 +68,11 @@ const CustomerRegisterForm = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (newCustomer: CustomerRegisterData) => {
-      await api.post("/customers", newCustomer);
+      await api.post("/customers", newCustomer, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     },
     onSuccess: () => {
       toast({
