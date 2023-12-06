@@ -26,6 +26,7 @@ import { useAuth } from "@/providers/auth";
 import { api } from "@/services/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { setCookie } from "cookies-next";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -62,7 +63,11 @@ const LoginForm = () => {
         description: "Login realizado com sucesso!",
       });
 
-      setToken(res.data.token);
+      const token = res.data.token;
+
+      setCookie("@cvlb_customers:token", token);
+
+      setToken(token);
 
       router.push("/dashboard");
     },
