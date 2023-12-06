@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
-import CustomerDeleteModal from "@/components/customer-delete-modal";
+import DeleteModal from "@/components/delete-modal";
 import { Button } from "@/components/ui/button";
 import { Customer } from "@/types/customer";
 import { FilePlus2Icon, Trash2Icon } from "lucide-react";
@@ -49,12 +49,18 @@ const CustomerListItem = ({ customer }: CustomerListItemProps) => {
             </Link>
           </Button>
 
-          <CustomerDeleteModal customerId={id}>
+          <DeleteModal
+            id={id}
+            endpoint="customers"
+            queryKey={["customers"]}
+            title="Excluir Cliente"
+            description="Tem certeza que deseja excluir este cliente?"
+          >
             <Button size="sm" variant="destructive">
               <Trash2Icon size={16} />
               <span className="hidden truncate lg:ml-2 lg:inline">Excluir</span>
             </Button>
-          </CustomerDeleteModal>
+          </DeleteModal>
         </div>
       </div>
     </div>
