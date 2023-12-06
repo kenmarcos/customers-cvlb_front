@@ -7,6 +7,10 @@ export const middleware = (request: NextRequest) => {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
+  if (request.nextUrl.pathname === "/" && token) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
   return null;
 };
 
