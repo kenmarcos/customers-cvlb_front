@@ -40,7 +40,7 @@ const CustomerListItem = ({ customer }: CustomerListItemProps) => {
         </div>
 
         <div className="grid grid-cols-1 gap-2 justify-self-end lg:grid-cols-2">
-          <Button size="sm" asChild>
+          <Button size="sm" asChild title="Detalhes">
             <Link href={`/cliente/${id}`}>
               <FilePlus2Icon size={16} />
               <span className="hidden truncate lg:ml-2 lg:inline">
@@ -56,7 +56,7 @@ const CustomerListItem = ({ customer }: CustomerListItemProps) => {
             title="Excluir Cliente"
             description="Tem certeza que deseja excluir este cliente?"
           >
-            <Button size="sm" variant="destructive">
+            <Button size="sm" variant="destructive" title="Excluir">
               <Trash2Icon size={16} />
               <span className="hidden truncate lg:ml-2 lg:inline">Excluir</span>
             </Button>
