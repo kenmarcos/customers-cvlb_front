@@ -7,6 +7,7 @@ import CustomerListItem from "./customer-list-item";
 import EmptyResourceMessage from "@/components/empty-resource-message";
 import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/providers/auth";
 import { api } from "@/services/api";
 import { CustomerList } from "@/types/customer";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
@@ -16,10 +17,16 @@ const CustomerListSection = () => {
   const [page, setPage] = useState(1);
   const PER_PAGE = 10;
 
+  const { token } = useAuth();
+
   const { data, isLoading, isError, error } = useQuery<CustomerList, Error>({
     queryKey: ["customers", page],
     queryFn: async () => {
-      const response = await api.get(`/customers?page=${page}`);
+      const response = await api.get(`/customers?page=${page}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       return response.data;
     },

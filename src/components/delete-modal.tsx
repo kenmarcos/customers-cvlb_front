@@ -12,6 +12,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
+import { useAuth } from "@/providers/auth";
 import { api } from "@/services/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangleIcon } from "lucide-react";
@@ -35,11 +36,17 @@ const DeleteModal = ({
 }: DeleteModalProps) => {
   const [open, setOpen] = useState(false);
 
+  const { token } = useAuth();
+
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      return await api.delete(`/${endpoint}/${id}`);
+      return await api.delete(`/${endpoint}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });

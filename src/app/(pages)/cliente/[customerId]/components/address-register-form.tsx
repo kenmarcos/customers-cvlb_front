@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/providers/auth";
 import { api } from "@/services/api";
 import { AddressRegisterData } from "@/types/address";
 import { addressRegisterSchema } from "@/utils/address-schema";
@@ -38,6 +39,8 @@ const AddressRegisterForm = ({ setOpen }: AddressRegisterFormProps) => {
   const pathname = usePathname();
 
   const { toast } = useToast();
+
+  const { token } = useAuth();
 
   const queryClient = useQueryClient();
 
@@ -58,7 +61,11 @@ const AddressRegisterForm = ({ setOpen }: AddressRegisterFormProps) => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (newAddress: AddressRegisterData) => {
-      return await api.post("/address", newAddress);
+      return await api.post("/address", newAddress, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     },
     onSuccess: () => {
       toast({
