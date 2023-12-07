@@ -44,7 +44,7 @@ Os objetivos a serem alcançados com a realização do projeto eram:
 ## 💡 Funcionalidades
 
 - [x] Tela Home
-  - [ ] Login de funcionário
+  - [x] Login de funcionário
 - [x] Tela "Dashboard"
   - [x] Menu para opções de funcionalidades do sistema
 - [x] Tela de Cadastro de Cliente
@@ -59,6 +59,13 @@ Os objetivos a serem alcançados com a realização do projeto eram:
   - [x] Atualização de Dados Pessoais do cliente
   - [x] Exibição de todo os Endereços do cliente
   - [x] Cadastro de novo Endereço para o cliente
+     
+### Login para testar a aplicação
+
+| Campo  | Valor          |
+| ------ | -------------- | 
+| E-mail | teste@mail.com |
+| Senha  | teste123       |
 
 <!-- LAYOUT -->
 
